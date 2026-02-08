@@ -112,7 +112,7 @@ export default function Home() {
           </Link>
         </div>
 
-        <div className="mt-6 grid gap-4 md:grid-cols-3">
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 md:grid-cols-3">
           {featured.map((p: any) => (
             <ProjectCard key={p.slug ?? p.title} project={p} />
           ))}
@@ -163,7 +163,8 @@ export default function Home() {
                 GitHub
               </a>
               <a
-                href="https://www.linkedin.com/"
+                href="https://www.linkedin.com/in/jnwajei22"
+"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-white"

@@ -32,7 +32,7 @@ export default function About() {
                 <figure className="space-y-2">
                   <div className="relative aspect-[4/3] overflow-hidden rounded-xl border border-white/10">
                     <Image
-                      src="/about/ftc_w_jatin.jpg"
+                      src="/about/robotics-1.jpg"
                       alt="High school robotics"
                       fill
                       priority
@@ -48,7 +48,7 @@ export default function About() {
                 <figure className="space-y-2">
                   <div className="relative aspect-[4/3] overflow-hidden rounded-xl border border-white/10">
                     <Image
-                      src="/about/p4_w_mcneese.jpg"
+                      src="/about/p4-1.jpg"
                       alt="Physician Pipeline Preparatory Program (P4)"
                       fill
                       sizes="(min-width: 640px) 50vw, 100vw"

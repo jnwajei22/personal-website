@@ -10,11 +10,11 @@ export const dynamic = "force-dynamic";
 const LAST_UPDATED = "Feb 5, 2026";
 
 const PHOTOS = [
-  { src: "/now/photo-1.jpg", alt: "Photo 1", caption: "_____" },
-  { src: "/now/photo-2.jpg", alt: "Photo 2", caption: "_____" },
-  { src: "/now/photo-3.jpg", alt: "Photo 3", caption: "_____" },
-  { src: "/now/photo-4.jpg", alt: "Photo 4", caption: "_____" },
-  { src: "/now/photo-4.jpg", alt: "Photo 4", caption: "_____" },
+  { src: "/now/now-photo-1.jpg", alt: "Photo 1", caption: "_____" },
+  { src: "/now/now-photo-2.jpg", alt: "Photo 2", caption: "_____" },
+  { src: "/now/now-photo-3.jpg", alt: "Photo 3", caption: "_____" },
+  { src: "/now/now-photo-4.jpg", alt: "Photo 4", caption: "_____" },
+  { src: "/now/now-photo-4.jpg", alt: "Photo 4", caption: "_____" },
 ];
 
 export default function NowPage() {
