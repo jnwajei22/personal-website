@@ -64,7 +64,7 @@ export const projects: Project[] = [
   {
     slug: "project-astro",
     title: "Project ASTRO",
-    status: "In Progress",
+    status: "IN_PROGRESS",
     summary: "Local-first OS-level assistant using offline Llama models with Hume AI voice and installable packaging.",
     tags: ["ML", "Systems"],
     domainTags: ["ML", "Systems"],
