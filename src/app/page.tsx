@@ -164,7 +164,6 @@ export default function Home() {
               </a>
               <a
                 href="https://www.linkedin.com/in/jnwajei22"
-"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-white"
