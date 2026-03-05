@@ -69,12 +69,13 @@ export const projects: Project[] = [
     tags: ["ML", "Systems"],
     domainTags: ["ML", "Systems"],
     stackTags: ["Llama", "Hume AI", "Automation"],
+    githubUrl: "https://github.com/jnwajei22/astro",
     mdx: () => import("./project-astro.mdx"),
   },
   {
     slug: "capacitive-keyboard-desk",
     title: "Capacitive Keyboard Desk",
-    status: "PROPOSED",
+    status: "IN_PROGRESS",
     summary: "Evolves from a custom keyboard + touch bar into a full capacitive glass-desk interface with gesture control.",
     tags: ["Hardware", "Embedded"],
     domainTags: ["Hardware", "Embedded"],
@@ -94,11 +95,12 @@ export const projects: Project[] = [
   {
     slug: "carbon-fiber-scale-planes",
     title: "Carbon Fiber Scale Planes",
-    status: "PROPOSED",
+    status: "IN_PROGRESS",
     summary: "Decorative scale aircraft builds in carbon fiber to stay sharp in Fusion 360 and fabrication.",
     tags: ["Hardware"],
     domainTags: ["Hardware"],
     stackTags: ["Fusion 360", "Carbon Fiber"],
+    githubUrl: "https://github.com/jnwajei22/carbon-fiber-scale-planes",
     mdx: () => import("./carbon-fiber-scale-fighters.mdx"),
   },
   {
@@ -109,6 +111,7 @@ export const projects: Project[] = [
     tags: ["Web", "Backend", "Systems"],
     domainTags: ["Web", "Backend", "Systems"],
     stackTags: ["Next.js", "Postgres", "RBAC"],
+    githubUrl: "https://github.com/jnwajei22/ogwashi-uku-website",
     mdx: () => import("./ogwashi-uku-website.mdx"),
   },
   {

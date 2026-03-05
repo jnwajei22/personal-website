@@ -7,13 +7,12 @@ import { SpotifyLive } from "@/components/now/SpotifyLive";
 
 export const dynamic = "force-dynamic";
 
-const LAST_UPDATED = "Feb 5, 2026";
+const LAST_UPDATED = "Mar 5, 2026";
 
 const PHOTOS = [
   { src: "/now/now-photo-1.jpg", alt: "Photo 1", caption: "_____" },
   { src: "/now/now-photo-2.jpg", alt: "Photo 2", caption: "_____" },
   { src: "/now/now-photo-3.jpg", alt: "Photo 3", caption: "_____" },
-  { src: "/now/now-photo-4.jpg", alt: "Photo 4", caption: "_____" },
   { src: "/now/now-photo-4.jpg", alt: "Photo 4", caption: "_____" },
 ];
 
@@ -24,9 +23,7 @@ export default function NowPage() {
         <PageHeader
           eyebrow="NOW"
           title="Now"
-          lead={
-            <>A snapshot of what I’m focused on right now — updated when something actually moves.</>
-          }
+          lead={<>A snapshot of what I’m focused on right now — updated when something actually moves.</>}
           meta={<>Last updated: {LAST_UPDATED}</>}
         />
 
@@ -37,33 +34,29 @@ export default function NowPage() {
           {/* Accent block (NOT a card) */}
           <div className="space-y-3 border-l border-white/15 pl-5">
             <h3 className="text-lg font-semibold text-white">
-              Current project: Ogwashi-Uku USA Association Portal (Auth + RBAC)
+              Current project: Carbon Fiber Scale Planes (YF-23 build)
             </h3>
 
             <p className="text-sm leading-relaxed text-white/70">
-              I’m taking the portal from “demo mode” to “real system.” The priority is solid
-              login/session handling, role-based access, and a clean API foundation — the unsexy
-              stuff that stops everything else from breaking later.
+              I’m building large-scale aircraft models with a real fabrication pipeline: CAD cleanup,
+              segmentation, alignment strategy, test coupons, and eventually carbon fiber layups. The
+              goal is repeatable process, not just a cool shelf piece.
             </p>
 
             <div className="space-y-2">
               <p className="text-sm font-semibold text-white">Milestones (updates only):</p>
               <ul className="list-disc space-y-1 pl-5 text-sm text-white/75">
-                <li>✅ Seed + accounts created: national admin / chapter admin / member test accounts in place.</li>
-                <li>✅ Portal UI wired to auth context: login/logout flow connected at the page level.</li>
-                <li>🧱 In progress: replacing Prisma usage with SQL/pg across auth routes + session storage.</li>
-                <li>
-                  Next milestone: <span className="font-mono">/api/auth/me</span>,{" "}
-                  <span className="font-mono">/login</span>, <span className="font-mono">/logout</span>{" "}
-                  fully working with SQL sessions + memberships returned correctly.
-                </li>
+                <li>✅ Repository structure created + documentation started.</li>
+                <li>✅ Bottom YF-23 model segmented, converted to solid, and printed.</li>
+                <li>🧱 In progress: upper body alignment + print planning.</li>
+                <li>Next milestone: upper body test coupon print results logged + finalize alignment strategy per seam.</li>
               </ul>
             </div>
 
             <p className="text-sm text-white/70">
               <span className="font-semibold text-white">Definition of “done” for this phase:</span>{" "}
-              You can log in, refresh the page, stay logged in, and see the right portal access based on
-              role + chapter scope.
+              A full printable set of parts with reliable alignment, clean seams, and documented settings
+              — ready for either assembly or mold planning.
             </p>
           </div>
         </section>
