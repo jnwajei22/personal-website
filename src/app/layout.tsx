@@ -7,8 +7,8 @@ import { SiteFooter } from "@/components/SiteFooter";
 export const metadata: Metadata = {
   metadataBase: new URL("https://justinnwajei.com"),
   title: {
-    default: "JSTN — Engineered Insanity",
-    template: "%s · JSTN — Engineered Insanity",
+    default: "JSTN — Boy Genius",
+    template: "%s · JSTN — Boy Genius",
   },
   description: "Hardware, software, and systems — projects, updates, and contact.",
 };
