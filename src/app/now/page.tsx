@@ -174,7 +174,9 @@ export default function NowPage() {
             with what’s been in rotation.
           </p>
 
-          <SpotifyLive />
+          <div className="relative left-1/2 w-[calc(100vw-2rem)] max-w-5xl -translate-x-1/2">
+            <SpotifyLive />
+          </div>
         </section>
 
         {/* Contact button */}

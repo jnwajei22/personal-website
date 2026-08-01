@@ -1,11 +1,19 @@
 // src/components/now/SpotifyPlaylistEmbed.tsx
-export function SpotifyPlaylistEmbed({ embedUrl }: { embedUrl: string }) {
+export function SpotifyPlaylistEmbed({
+  embedUrl,
+}: {
+  embedUrl: string;
+}) {
   return (
-    <div className="mt-6 space-y-2">
+    <div className="space-y-3">
       <div>
-        <p className="text-sm font-semibold">Community playlist</p>
-        <p className="mt-1 text-sm text-white/70">
-          Follow it, steal songs, leave a trail. Thanks for stopping by!
+        <p className="text-sm font-semibold text-white">
+          Trail Mix
+        </p>
+
+        <p className="mt-1 text-sm leading-relaxed text-white/65">
+          The community playlist. Follow it, steal songs,
+          or leave one behind above.
         </p>
       </div>
 

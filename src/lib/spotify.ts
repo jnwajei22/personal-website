@@ -1,4 +1,3 @@
-// src/lib/spotify.ts
 type TokenResponse = {
   access_token: string;
   token_type: string;
@@ -7,10 +6,28 @@ type TokenResponse = {
   refresh_token?: string;
 };
 
+type SpotifyMethod = "GET" | "POST" | "PUT" | "DELETE";
+
+type SpotifyRequestOptions = {
+  method?: SpotifyMethod;
+  body?: unknown;
+};
+
+type CachedAccessToken = {
+  value: string;
+  expiresAt: number;
+};
+
+let cachedAccessToken: CachedAccessToken | null = null;
+
 function mustEnv(name: string) {
-  const v = process.env[name];
-  if (!v) throw new Error(`Missing env var: ${name}`);
-  return v;
+  const value = process.env[name];
+
+  if (!value) {
+    throw new Error(`Missing env var: ${name}`);
+  }
+
+  return value;
 }
 
 export function getSpotifyConfig() {
@@ -20,12 +37,14 @@ export function getSpotifyConfig() {
     redirectUri: mustEnv("SPOTIFY_REDIRECT_URI"),
     postAuthRedirect: process.env.SPOTIFY_POST_AUTH_REDIRECT || "/now",
     refreshToken: process.env.SPOTIFY_REFRESH_TOKEN || "",
+    playlistId: process.env.SPOTIFY_PLAYLIST_ID || "",
   };
 }
 
 function basicAuthHeader(clientId: string, clientSecret: string) {
-  const b64 = Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
-  return `Basic ${b64}`;
+  const encoded = Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
+
+  return `Basic ${encoded}`;
 }
 
 export async function exchangeCodeForToken(code: string) {
@@ -37,7 +56,7 @@ export async function exchangeCodeForToken(code: string) {
     redirect_uri: redirectUri,
   });
 
-  const res = await fetch("https://accounts.spotify.com/api/token", {
+  const response = await fetch("https://accounts.spotify.com/api/token", {
     method: "POST",
     headers: {
       Authorization: basicAuthHeader(clientId, clientSecret),
@@ -47,24 +66,30 @@ export async function exchangeCodeForToken(code: string) {
     cache: "no-store",
   });
 
-  if (!res.ok) {
-    const txt = await res.text();
-    throw new Error(`Spotify token exchange failed: ${res.status} ${txt}`);
+  if (!response.ok) {
+    const text = await response.text();
+
+    throw new Error(
+      `Spotify token exchange failed: ${response.status} ${text}`,
+    );
   }
 
-  return (await res.json()) as TokenResponse;
+  return (await response.json()) as TokenResponse;
 }
 
 export async function refreshAccessToken() {
   const { clientId, clientSecret, refreshToken } = getSpotifyConfig();
-  if (!refreshToken) throw new Error("Missing SPOTIFY_REFRESH_TOKEN");
+
+  if (!refreshToken) {
+    throw new Error("Missing SPOTIFY_REFRESH_TOKEN");
+  }
 
   const body = new URLSearchParams({
     grant_type: "refresh_token",
     refresh_token: refreshToken,
   });
 
-  const res = await fetch("https://accounts.spotify.com/api/token", {
+  const response = await fetch("https://accounts.spotify.com/api/token", {
     method: "POST",
     headers: {
       Authorization: basicAuthHeader(clientId, clientSecret),
@@ -74,29 +99,87 @@ export async function refreshAccessToken() {
     cache: "no-store",
   });
 
-  if (!res.ok) {
-    const txt = await res.text();
-    throw new Error(`Spotify refresh failed: ${res.status} ${txt}`);
+  if (!response.ok) {
+    const text = await response.text();
+
+    throw new Error(`Spotify refresh failed: ${response.status} ${text}`);
   }
 
-  return (await res.json()) as TokenResponse;
+  return (await response.json()) as TokenResponse;
 }
 
-export async function spotifyGet<T>(path: string) {
+async function getAccessToken(forceRefresh = false) {
+  if (
+    !forceRefresh &&
+    cachedAccessToken !== null &&
+    cachedAccessToken.expiresAt > Date.now()
+  ) {
+    return cachedAccessToken.value;
+  }
+
   const token = await refreshAccessToken();
 
-  const res = await fetch(`https://api.spotify.com/v1${path}`, {
-    headers: { Authorization: `Bearer ${token.access_token}` },
+  cachedAccessToken = {
+    value: token.access_token,
+    expiresAt:
+      Date.now() + Math.max(token.expires_in - 60, 0) * 1000,
+  };
+
+  return token.access_token;
+}
+
+async function spotifyRequest<T>(
+  path: string,
+  options: SpotifyRequestOptions = {},
+  retryAfterUnauthorized = true,
+): Promise<T | null> {
+  const method = options.method ?? "GET";
+  const accessToken = await getAccessToken();
+
+  const response = await fetch(`https://api.spotify.com/v1${path}`, {
+    method,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      ...(options.body !== undefined
+        ? { "Content-Type": "application/json" }
+        : {}),
+    },
+    body:
+      options.body !== undefined
+        ? JSON.stringify(options.body)
+        : undefined,
     cache: "no-store",
   });
 
-  // currently-playing often returns 204 when nothing is playing
-  if (res.status === 204) return null as T | null;
-
-  if (!res.ok) {
-    const txt = await res.text();
-    throw new Error(`Spotify API error ${res.status}: ${txt}`);
+  // Spotify commonly returns 204 when an endpoint has no content.
+  if (response.status === 204) {
+    return null;
   }
 
-  return (await res.json()) as T;
+  // Retry once with a freshly generated token.
+  if (response.status === 401 && retryAfterUnauthorized) {
+    cachedAccessToken = null;
+    await getAccessToken(true);
+
+    return spotifyRequest<T>(path, options, false);
+  }
+
+  if (!response.ok) {
+    const text = await response.text();
+
+    throw new Error(`Spotify API error ${response.status}: ${text}`);
+  }
+
+  return (await response.json()) as T;
+}
+
+export function spotifyGet<T>(path: string) {
+  return spotifyRequest<T>(path);
+}
+
+export function spotifyPost<T>(path: string, body?: unknown) {
+  return spotifyRequest<T>(path, {
+    method: "POST",
+    body,
+  });
 }
