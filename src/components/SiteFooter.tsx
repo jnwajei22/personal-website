@@ -17,7 +17,7 @@ export function SiteFooter() {
           <span className="text-sm font-semibold tracking-tight text-white">
             JSTN
           </span>
-          <p className="text-sm text-white/60">© {year} • Built with Love (actually Next.js, but who's really cares)</p>
+          <p className="text-sm text-white/60">© Boy Genius {year} • Built with Love (actually Next.js, but who really cares)</p>
         </div>
 
         <nav className="flex flex-wrap gap-x-6 gap-y-3">
