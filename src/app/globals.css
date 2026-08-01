@@ -123,3 +123,5 @@
     @apply bg-background text-foreground;
   }
 }
+
+.spotify-results-scrollbar{scrollbar-width:thin;scrollbar-color:rgba(168,85,247,.75) transparent;scrollbar-gutter:stable}.spotify-results-scrollbar::-webkit-scrollbar{width:7px}.spotify-results-scrollbar::-webkit-scrollbar-track{background:transparent}.spotify-results-scrollbar::-webkit-scrollbar-thumb{border:2px solid transparent;border-radius:999px;background:linear-gradient(180deg,rgba(167,139,250,.9),rgba(217,70,239,.75));background-clip:content-box}.spotify-results-scrollbar::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,rgba(196,181,253,1),rgba(232,121,249,.95));background-clip:content-box}.spotify-results-scrollbar::-webkit-scrollbar-button{display:none;width:0;height:0}

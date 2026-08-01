@@ -1,4 +1,4 @@
-// src/components/now/SpotifyLive.tsx
+// src\components\now\SpotifyLive.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -53,19 +53,40 @@ async function fetchSpotifyData<T>(url: string) {
   };
 
   if (!response.ok) {
-    throw new Error(
-      data.error || `${url} is unavailable`,
-    );
+    throw new Error(data.error || `${url} is unavailable`);
   }
 
   return data;
 }
 
+function ExternalArrowIcon() {
+  return (
+    <svg
+      viewBox="0 0 20 20"
+      fill="none"
+      aria-hidden="true"
+      className="
+        h-4 w-4 transition-transform duration-300
+        group-hover/button:-translate-y-0.5
+        group-hover/button:translate-x-0.5
+      "
+    >
+      <path
+        d="M6 14 14 6M8 6h6v6"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export function SpotifyLive() {
   const [now, setNow] = useState<NowPlaying | null>(null);
-  const [recent, setRecent] = useState<
-    RecentTrack[] | null
-  >(null);
+  const [recent, setRecent] = useState<RecentTrack[] | null>(
+    null,
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [playlistRevision, setPlaylistRevision] =
@@ -117,8 +138,67 @@ export function SpotifyLive() {
     };
   }, []);
 
-  const currentlyPlaying =
-    now?.isPlaying && now.track;
+  const currentlyPlaying = Boolean(
+    now?.isPlaying && now.track,
+  );
+
+  const playbackState = loading
+    ? "loading"
+    : currentlyPlaying
+      ? "live"
+      : "offline";
+
+  const playbackThemes = {
+    loading: {
+      card:
+        "hover:border-zinc-400/40 dark:hover:border-zinc-400/35",
+      accent:
+        "from-zinc-400 via-zinc-500 to-transparent",
+      glow:
+        "bg-zinc-400/10 group-hover:bg-zinc-400/15 dark:bg-zinc-400/[0.07]",
+      status:
+        "border-zinc-400/30 bg-zinc-400/10 text-zinc-600 dark:text-zinc-300",
+      marker:
+        "border-zinc-400/20 bg-zinc-400/10 text-zinc-600 dark:text-zinc-300",
+      dot: "bg-zinc-400",
+      statusText: "Checking",
+      markerText: "Spotify",
+    },
+    live: {
+      card:
+        "hover:border-emerald-400/40 dark:hover:border-emerald-400/35",
+      accent:
+        "from-emerald-400 via-cyan-400 to-transparent",
+      glow:
+        "bg-emerald-400/10 group-hover:bg-emerald-400/15 dark:bg-emerald-400/[0.07]",
+      status:
+        "border-emerald-400/30 bg-emerald-400/10 text-emerald-700 dark:text-emerald-300",
+      marker:
+        "border-emerald-400/20 bg-emerald-400/10 text-emerald-700 dark:text-emerald-300",
+      dot:
+        "bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]",
+      statusText: "Live",
+      markerText: "Now playing",
+    },
+    offline: {
+      card:
+        "hover:border-rose-400/40 dark:hover:border-rose-400/35",
+      accent:
+        "from-rose-400 via-red-400 to-transparent",
+      glow:
+        "bg-rose-400/10 group-hover:bg-rose-400/15 dark:bg-rose-400/[0.07]",
+      status:
+        "border-rose-400/30 bg-rose-400/10 text-rose-700 dark:text-rose-300",
+      marker:
+        "border-rose-400/20 bg-rose-400/10 text-rose-700 dark:text-rose-300",
+      dot:
+        "bg-rose-400 shadow-[0_0_8px_rgba(251,113,133,0.7)]",
+      statusText: "Offline",
+      markerText: "Not playing",
+    },
+  } as const;
+
+  const playbackTheme = playbackThemes[playbackState];
 
   const heroArt =
     now?.albumArtUrl ??
@@ -129,146 +209,367 @@ export function SpotifyLive() {
     "https://open.spotify.com/embed/playlist/2VEh5Fq68yP0RBHFSwiF16?utm_source=generator";
 
   return (
-    <div className="space-y-7">
+    <div className="space-y-8">
       {error ? (
-        <p className="rounded-xl border border-yellow-500/20 bg-yellow-500/10 px-4 py-3 text-sm text-yellow-100/80">
-          Part of the live Spotify feed is unavailable. Guest
-          additions may still work.
+        <p
+          className="
+            rounded-2xl border border-amber-400/25
+            bg-amber-400/10 px-4 py-3 text-sm
+            text-amber-800 dark:text-amber-200
+          "
+        >
+          Part of the live Spotify feed is unavailable.
+          Guest additions may still work.
         </p>
       ) : null}
 
-      <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02]">
-        <div className="grid min-w-0 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
-          {/* Live panel */}
-          <div className="min-w-0 border-b border-white/10 p-5 sm:p-6 md:border-b-0 md:border-r">
-            <div className="flex items-center justify-between gap-3">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/45">
-                Now playing
-              </p>
+      <div className="grid gap-6 md:grid-cols-2 md:items-start">
+        {/* Now playing card */}
+        <article
+          className={`
+            group relative flex min-w-0 flex-col
+            overflow-hidden rounded-[28px]
+            border border-black/10 bg-white/80 p-7
+            shadow-[0_12px_40px_rgba(0,0,0,0.04)]
+            backdrop-blur-sm
+            transition-all duration-300 ease-out
+            hover:-translate-y-1
+            hover:shadow-[0_22px_60px_rgba(0,0,0,0.10)]
+            dark:border-white/10 dark:bg-zinc-950/75
+            dark:shadow-[0_18px_60px_rgba(0,0,0,0.28)]
+            md:h-[586px]
+            ${playbackTheme.card}
+          `}
+        >
+          {/* Colored top edge */}
+          <div
+            className={`
+              absolute inset-x-8 top-0 h-px
+              bg-gradient-to-r
+              opacity-70 transition-opacity duration-300
+              group-hover:opacity-100
+              ${playbackTheme.accent}
+            `}
+          />
 
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/10 px-2.5 py-1 text-[11px] text-white/55">
-                <span
-                  className={`h-1.5 w-1.5 rounded-full ${currentlyPlaying
-                      ? "bg-green-400"
-                      : "bg-white/30"
-                    }`}
-                />
-                Live
-              </span>
-            </div>
+          {/* Ambient glow */}
+          <div
+            className={`
+              pointer-events-none absolute -right-20 -top-20
+              h-48 w-48 rounded-full blur-3xl
+              transition-all duration-500
+              group-hover:scale-125
+              ${playbackTheme.glow}
+            `}
+          />
 
-            <div className="mt-5 aspect-square w-full max-w-[240px] overflow-hidden rounded-xl border border-white/10 bg-white/[0.04]">
-              {heroArt ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={heroArt}
-                  alt=""
-                  className="h-full w-full object-cover"
-                />
-              ) : (
-                <div className="flex h-full items-center justify-center text-white/20">
-                  <svg
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                    className="h-16 w-16"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.4"
-                  >
-                    <path d="M9 18V5l11-2v13" />
-                    <circle cx="6" cy="18" r="3" />
-                    <circle cx="17" cy="16" r="3" />
-                  </svg>
-                </div>
-              )}
-            </div>
-
-            <div className="mt-5 min-w-0">
-              <p className="break-words text-lg font-semibold leading-snug text-white">
-                {loading
-                  ? "Checking Spotify…"
-                  : currentlyPlaying
-                    ? now.track
-                    : "Nothing playing right now."}
-              </p>
-
-              {currentlyPlaying && now.artist ? (
-                <p className="mt-1 break-words text-sm leading-relaxed text-white/60">
-                  {now.artist}
-                </p>
-              ) : null}
-
-              {currentlyPlaying && now.songUrl ? (
-                <a
-                  href={now.songUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="mt-4 inline-flex h-10 items-center justify-center whitespace-nowrap rounded-xl border border-white/15 bg-white/[0.03] px-4 text-xs font-medium text-white transition hover:border-white/30 hover:bg-white/[0.07]"
-                >
-                  Open in Spotify
-                  <span aria-hidden="true" className="ml-1.5">
-                    ↗
-                  </span>
-                </a>
-              ) : (
-                <p className="mt-3 text-xs leading-relaxed text-white/40">
-                  Press play and the site becomes a very specific billboard.
-                </p>
-              )}
-            </div>
+          {/* Dot matrix */}
+          <div
+            aria-hidden="true"
+            className="
+              absolute right-7 top-7 grid grid-cols-3 gap-1.5
+              opacity-20 transition-opacity duration-300
+              group-hover:opacity-40
+            "
+          >
+            {Array.from({ length: 9 }).map((_, index) => (
+              <span
+                key={index}
+                className="h-1 w-1 rounded-full bg-current"
+              />
+            ))}
           </div>
 
-          <SpotifyGuestAdd
-            onAdded={() => {
-              setPlaylistRevision(
-                (revision) => revision + 1,
-              );
-            }}
-          />
-        </div>
+          {/* Metadata */}
+          <div className="relative flex min-h-8 items-center gap-2 pr-16">
+            <span
+              className={`
+                inline-flex items-center gap-2 rounded-full
+                border px-3 py-1 text-[10px] font-bold
+                uppercase tracking-[0.14em]
+                ${playbackTheme.status}
+              `}
+            >
+              <span
+                className={`
+                  h-1.5 w-1.5 rounded-full
+                  ${playbackTheme.dot}
+                `}
+              />
+
+              {playbackTheme.statusText}
+            </span>
+
+            <span
+              className={`
+                hidden rounded-full border px-3 py-1
+                text-[10px] font-semibold uppercase
+                tracking-[0.12em] sm:inline-flex
+                ${playbackTheme.marker}
+              `}
+            >
+              {playbackTheme.markerText}
+            </span>
+          </div>
+
+          {/* Album artwork */}
+          <div
+            className="
+              relative mt-6 aspect-square w-full
+              max-w-[230px] overflow-hidden rounded-2xl
+              border border-black/10 bg-black/[0.03]
+              shadow-[0_12px_30px_rgba(0,0,0,0.10)]
+              dark:border-white/10 dark:bg-white/[0.04]
+              dark:shadow-[0_16px_40px_rgba(0,0,0,0.35)]
+            "
+          >
+            {heroArt ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={heroArt}
+                alt=""
+                className="
+                  h-full w-full object-cover
+                  transition-transform duration-500
+                  group-hover:scale-[1.02]
+                "
+              />
+            ) : (
+              <div
+                className="
+                  flex h-full items-center justify-center
+                  text-zinc-300 dark:text-white/20
+                "
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                  className="h-16 w-16"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.4"
+                >
+                  <path d="M9 18V5l11-2v13" />
+                  <circle cx="6" cy="18" r="3" />
+                  <circle cx="17" cy="16" r="3" />
+                </svg>
+              </div>
+            )}
+          </div>
+
+          {/* Track information */}
+          <div className="relative mt-6 min-w-0">
+            <h3
+              className="
+                break-words text-2xl font-semibold
+                tracking-[-0.035em] text-zinc-950
+                transition-transform duration-300
+                group-hover:translate-x-0.5
+                dark:text-white
+              "
+            >
+              {loading
+                ? "Checking Spotify…"
+                : currentlyPlaying
+                  ? now?.track
+                  : "Nothing playing right now."}
+            </h3>
+
+            {currentlyPlaying && now?.artist ? (
+              <p
+                className="
+                  mt-2 break-words text-sm leading-6
+                  text-zinc-600 dark:text-zinc-400
+                "
+              >
+                {now.artist}
+              </p>
+            ) : (
+              <p
+                className="
+                  mt-3 text-sm leading-6
+                  text-zinc-500 dark:text-zinc-500
+                "
+              >
+                Press play and the site becomes a very
+                specific billboard.
+              </p>
+            )}
+          </div>
+
+          {/* Tags
+          <div className="relative mt-6 flex flex-wrap gap-2">
+            <span
+              className="
+                rounded-full border border-emerald-500/20
+                bg-emerald-500/8 px-2.5 py-1
+                text-[11px] font-medium text-emerald-700
+                transition-transform duration-200
+                group-hover:-translate-y-px
+                dark:text-emerald-300
+              "
+            >
+              Spotify
+            </span>
+
+            <span
+              className="
+                rounded-full border border-sky-500/20
+                bg-sky-500/8 px-2.5 py-1
+                text-[11px] font-medium text-sky-700
+                transition-transform duration-200
+                group-hover:-translate-y-px
+                dark:text-sky-300
+              "
+            >
+              Live feed
+            </span>
+          </div> */}
+
+          {/* Feed information */}
+          <div
+            className="
+              relative mt-5 border-t border-black/[0.06]
+              pt-4 dark:border-white/[0.07]
+            "
+          >
+            <p
+              className="
+                text-[10px] font-semibold uppercase
+                tracking-[0.16em] text-zinc-400
+                dark:text-zinc-600
+              "
+            >
+              Refresh
+            </p>
+
+            <p className="mt-1.5 text-xs text-zinc-500 dark:text-zinc-400">
+              Spotify activity updates about every 15 seconds.
+            </p>
+          </div>
+
+          {/* Action */}
+          <div className="relative mt-auto pt-7">
+            {currentlyPlaying && now?.songUrl ? (
+              <a
+                href={now.songUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="
+                  group/button inline-flex h-12 w-full
+                  items-center justify-between rounded-2xl
+                  bg-zinc-950 px-5 text-sm font-semibold
+                  text-white transition-all duration-200
+                  hover:bg-zinc-800 active:scale-[0.98]
+                  dark:bg-white dark:text-black
+                  dark:hover:bg-zinc-200
+                "
+              >
+                <span>Open in Spotify</span>
+                <ExternalArrowIcon />
+              </a>
+            ) : (
+              <span
+                className="
+                  inline-flex h-12 w-full items-center
+                  justify-center rounded-2xl border
+                  border-dashed border-black/10
+                  text-sm font-medium text-zinc-400
+                  dark:border-white/10 dark:text-zinc-600
+                "
+              >
+                Waiting for playback
+              </span>
+            )}
+          </div>
+        </article>
+
+        <SpotifyGuestAdd
+          onAdded={() => {
+            setPlaylistRevision(
+              (revision) => revision + 1,
+            );
+          }}
+        />
       </div>
 
       {/* Recent rotation */}
       <div className="space-y-3">
-        <div className="flex items-end justify-between gap-4">
-          <div>
-            <h3 className="text-sm font-semibold text-white">
-              Recent rotation
-            </h3>
+        <div>
+          <h3 className="text-sm font-semibold text-zinc-950 dark:text-white">
+            Recent rotation
+          </h3>
 
-            <p className="mt-1 text-xs text-white/45">
-              Updated about every 15 seconds.
-            </p>
-          </div>
+          <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-500">
+            Updated about every 15 seconds.
+          </p>
         </div>
 
         {recent?.length ? (
-          <ul className="divide-y divide-white/10 border-y border-white/10">
+          <ul
+            className="
+              divide-y divide-black/[0.07]
+              border-y border-black/[0.07]
+              dark:divide-white/10 dark:border-white/10
+            "
+          >
             {recent.slice(0, 6).map((track, index) => (
               <li
                 key={
                   track.songUrl ??
                   `${track.track}-${track.playedAt}-${index}`
                 }
-                className="py-3"
+                className="
+                  py-3 transition-colors duration-200
+                  hover:bg-black/[0.015]
+                  dark:hover:bg-white/[0.015]
+                "
               >
                 <div className="flex items-center gap-3">
-                  <a
-                    href={track.songUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="h-10 w-10 shrink-0 overflow-hidden rounded-md border border-white/10 bg-white/[0.04]"
-                  >
-                    {track.albumArtUrl ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={track.albumArtUrl}
-                        alt=""
-                        className="h-full w-full object-cover"
-                        loading="lazy"
-                      />
-                    ) : null}
-                  </a>
+                  {track.songUrl ? (
+                    <a
+                      href={track.songUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="
+                        h-10 w-10 shrink-0 overflow-hidden
+                        rounded-lg border border-black/10
+                        bg-black/[0.03]
+                        dark:border-white/10
+                        dark:bg-white/[0.04]
+                      "
+                    >
+                      {track.albumArtUrl ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={track.albumArtUrl}
+                          alt=""
+                          className="h-full w-full object-cover"
+                          loading="lazy"
+                        />
+                      ) : null}
+                    </a>
+                  ) : (
+                    <div
+                      className="
+                        h-10 w-10 shrink-0 overflow-hidden
+                        rounded-lg border border-black/10
+                        bg-black/[0.03]
+                        dark:border-white/10
+                        dark:bg-white/[0.04]
+                      "
+                    >
+                      {track.albumArtUrl ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={track.albumArtUrl}
+                          alt=""
+                          className="h-full w-full object-cover"
+                          loading="lazy"
+                        />
+                      ) : null}
+                    </div>
+                  )}
 
                   <div className="min-w-0 flex-1">
                     {track.songUrl ? (
@@ -276,22 +577,26 @@ export function SpotifyLive() {
                         href={track.songUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="block truncate text-sm text-white/85 hover:text-white"
+                        className="
+                          block truncate text-sm text-zinc-800
+                          transition-colors hover:text-black
+                          dark:text-white/85 dark:hover:text-white
+                        "
                       >
                         {track.track}
                       </a>
                     ) : (
-                      <p className="truncate text-sm text-white/85">
+                      <p className="truncate text-sm text-zinc-800 dark:text-white/85">
                         {track.track}
                       </p>
                     )}
 
-                    <p className="mt-1 truncate text-xs text-white/55">
+                    <p className="mt-1 truncate text-xs text-zinc-500 dark:text-white/55">
                       {track.artist}
                     </p>
                   </div>
 
-                  <div className="shrink-0 text-xs text-white/35">
+                  <div className="shrink-0 text-xs text-zinc-400 dark:text-white/35">
                     {timeAgo(track.playedAt)}
                   </div>
                 </div>
@@ -299,17 +604,17 @@ export function SpotifyLive() {
             ))}
           </ul>
         ) : loading ? (
-          <p className="text-sm text-white/50">
+          <p className="text-sm text-zinc-500 dark:text-white/50">
             Loading recent tracks…
           </p>
         ) : (
-          <p className="text-sm text-white/50">
+          <p className="text-sm text-zinc-500 dark:text-white/50">
             Nothing in the recent list yet.
           </p>
         )}
       </div>
 
-      <div className="h-px bg-white/10" />
+      <div className="h-px bg-black/[0.08] dark:bg-white/10" />
 
       <SpotifyPlaylistEmbed
         key={playlistRevision}

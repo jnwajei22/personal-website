@@ -179,7 +179,7 @@ export default function NowPage() {
           </div>
         </section>
 
-        {/* Contact button */}
+        {/* Contact button
         <div className="mt-12">
           <Link
             href="/contact"
@@ -187,7 +187,7 @@ export default function NowPage() {
           >
             Contact
           </Link>
-        </div>
+        </div> */}
       </div>
     </SiteLayout>
   );
