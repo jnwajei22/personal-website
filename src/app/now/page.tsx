@@ -7,7 +7,7 @@ import { SpotifyLive } from "@/components/now/SpotifyLive";
 
 export const dynamic = "force-dynamic";
 
-const LAST_UPDATED = "Mar 5, 2026";
+const LAST_UPDATED = "Aug 1, 2026";
 
 const PHOTOS = [
   { src: "/now/now-photo-1.jpg", alt: "Photo 1", caption: "_____" },
@@ -23,40 +23,112 @@ export default function NowPage() {
         <PageHeader
           eyebrow="NOW"
           title="Now"
-          lead={<>A snapshot of what I’m focused on right now — updated when something actually moves.</>}
+          lead={
+            <>
+              A snapshot of what I’m building, learning, and moving toward right
+              now.
+            </>
+          }
           meta={<>Last updated: {LAST_UPDATED}</>}
         />
 
         {/* Current focus */}
-        <section className="mt-10 space-y-4">
-          <h2 className="text-xl font-semibold tracking-tight text-white">Current focus</h2>
-
-          {/* Accent block (NOT a card) */}
-          <div className="space-y-3 border-l border-white/15 pl-5">
-            <h3 className="text-lg font-semibold text-white">
-              Current project: Carbon Fiber Scale Planes (YF-23 build)
-            </h3>
+        <section className="mt-10 space-y-5">
+          <div className="space-y-2">
+            <h2 className="text-xl font-semibold tracking-tight text-white">
+              Current focus
+            </h2>
 
             <p className="text-sm leading-relaxed text-white/70">
-              I’m building large-scale aircraft models with a real fabrication pipeline: CAD cleanup,
-              segmentation, alignment strategy, test coupons, and eventually carbon fiber layups. The
-              goal is repeatable process, not just a cool shelf piece.
+              I’m in a finish-and-validate phase: closing out existing builds,
+              strengthening my PCB workflow, and using each project to de-risk
+              the next one.
+            </p>
+          </div>
+
+          <div className="space-y-7">
+            <article className="space-y-2 border-l border-white/15 pl-5">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/45">
+                01 / Finish
+              </p>
+
+              <h3 className="text-lg font-semibold text-white">
+                Carbon Fiber Scale Planes
+              </h3>
+
+              <p className="text-sm leading-relaxed text-white/70">
+                I’m completing the printed YF-23 structure, refining the
+                alignment and seam strategy, and documenting the fabrication
+                process. The immediate goal is a complete, cleanly assembled
+                airframe before moving deeper into mold planning and composite
+                work.
+              </p>
+            </article>
+
+            <article className="space-y-2 border-l border-white/15 pl-5">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/45">
+                02 / Validate
+              </p>
+
+              <h3 className="text-lg font-semibold text-white">
+                Capacitive Keyboard V1
+              </h3>
+
+              <p className="text-sm leading-relaxed text-white/70">
+                The keyboard is my controlled PCB bring-up project: power,
+                charging, USB, Bluetooth, matrix scanning, lighting, firmware,
+                and hardware validation in one complete system. Finishing it
+                should expose the mistakes I would rather find here than on an
+                aircraft.
+              </p>
+            </article>
+
+            <article className="space-y-2 border-l border-white/15 pl-5">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/45">
+                03 / Expand
+              </p>
+
+              <h3 className="text-lg font-semibold text-white">
+                Custom Flight Controller
+              </h3>
+
+              <p className="text-sm leading-relaxed text-white/70">
+                The next major hardware build is a custom flight controller.
+                I’m deliberately placing it after the keyboard so I can carry
+                better board-design, debugging, and firmware habits into a
+                system involving sensors, communications, control logic, and
+                eventual flight testing.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <div className="mt-10 border-b border-white/10" />
+
+        {/* In parallel */}
+        <section className="mt-10 space-y-4">
+          <h2 className="text-xl font-semibold tracking-tight text-white">
+            In parallel
+          </h2>
+
+          <div className="space-y-3 text-sm leading-relaxed text-white/70">
+            <p>
+              I’m completing the remaining coursework for my associate degree
+              in engineering and preparing to transfer into mechanical
+              engineering.
             </p>
 
-            <div className="space-y-2">
-              <p className="text-sm font-semibold text-white">Milestones (updates only):</p>
-              <ul className="list-disc space-y-1 pl-5 text-sm text-white/75">
-                <li>✅ Repository structure created + documentation started.</li>
-                <li>✅ Bottom YF-23 model segmented, converted to solid, and printed.</li>
-                <li>🧱 In progress: upper body alignment + print planning.</li>
-                <li>Next milestone: upper body test coupon print results logged + finalize alignment strategy per seam.</li>
-              </ul>
-            </div>
+            <p>
+              I’m also developing an independent robotics research direction
+              around wearable gesture control for a robotic arm—combining
+              sensing, embedded communication, motion mapping, and
+              human-machine interaction.
+            </p>
 
-            <p className="text-sm text-white/70">
-              <span className="font-semibold text-white">Definition of “done” for this phase:</span>{" "}
-              A full printable set of parts with reliable alignment, clean seams, and documented settings
-              — ready for either assembly or mold planning.
+            <p>
+              Professionally, I’m preparing NASA internship applications and
+              pursuing roles where I can contribute to embedded hardware,
+              aerospace, robotics, manufacturing, or technical communication.
             </p>
           </div>
         </section>
@@ -65,7 +137,10 @@ export default function NowPage() {
 
         {/* Me now */}
         <section className="mt-10 space-y-4">
-          <h2 className="text-xl font-semibold tracking-tight text-white">Me now</h2>
+          <h2 className="text-xl font-semibold tracking-tight text-white">
+            Me now
+          </h2>
+
           <p className="text-sm leading-relaxed text-white/70">
             A tiny visual dump of what life looks like lately.
           </p>
@@ -73,11 +148,15 @@ export default function NowPage() {
           <PhotoCarouselRing photos={PHOTOS} />
 
           <div className="mt-4 space-y-2">
-            <h3 className="text-sm font-semibold text-white">Where my head’s at</h3>
+            <h3 className="text-sm font-semibold text-white">
+              Where my head’s at
+            </h3>
+
             <ul className="list-disc space-y-1 pl-5 text-sm text-white/75">
-              <li>Stopping to smell the roses</li>
-              <li>Being okay with imperfection the first time around</li>
-              <li>Staying consistent regardless of motivation!</li>
+              <li>Finish more than I announce.</li>
+              <li>Use smaller systems to de-risk larger ones.</li>
+              <li>Document the failures, not only the polished result.</li>
+              <li>Stay consistent even when motivation disappears.</li>
             </ul>
           </div>
         </section>
@@ -86,9 +165,13 @@ export default function NowPage() {
 
         {/* Spotify */}
         <section className="mt-10 space-y-4">
-          <h2 className="text-xl font-semibold tracking-tight text-white">What I’m listening to</h2>
+          <h2 className="text-xl font-semibold tracking-tight text-white">
+            What I’m listening to
+          </h2>
+
           <p className="text-sm leading-relaxed text-white/70">
-            This is live. If I’m playing something, you’ll see it here — along with what’s been in rotation.
+            This is live. If I’m playing something, you’ll see it here — along
+            with what’s been in rotation.
           </p>
 
           <SpotifyLive />
